@@ -1,0 +1,63 @@
+def combine_elements(list1: list[dict], list2: list[dict]) -> list[dict]:
+    combined_list = sorted(list1 + list2, key=lambda x: x["positions"][0])
+
+    if not combined_list:
+        return []
+
+    merged_elements = []
+    current_element = {
+        "positions": list(combined_list[0]["positions"]),
+        "values": list(combined_list[0]["values"])
+    }
+    
+    for i in range(1, len(combined_list)):
+        next_element = combined_list[i]
+
+        l1, r1 = current_element["positions"]
+        l2, r2 = next_element["positions"]
+
+        len1 = r1 - l1
+        len2 = r2 - l2
+
+        overlap_start = max(l1, l2)
+        overlap_end = min(r1, r2)
+        overlap_length = max(0, overlap_end - overlap_start)
+
+        merge_condition = False
+        if len1 > 0 and overlap_length > 0.5 * len1:
+            merge_condition = True
+        if len2 > 0 and overlap_length > 0.5 * len2:
+            merge_condition = True
+
+        if merge_condition:
+            current_element["values"].extend(next_element["values"])
+        else:
+            merged_elements.append(current_element)
+            current_element = {
+                "positions": list(next_element["positions"]),
+                "values": list(next_element["values"])
+            }
+    
+    merged_elements.append(current_element)
+
+    return merged_elements
+
+if __name__ == "__main__":
+    # Define your input lists directly here
+    input_list1 = [
+        {"positions": [10, 20], "values": ["A"]},
+        {"positions": [50, 60], "values": ["C"]}
+    ]
+    input_list2 = [
+        {"positions": [15, 25], "values": ["B"]},
+        {"positions": [55, 57], "values": ["D"]},
+        {"positions": [70, 80], "values": ["E"]}
+    ]
+
+    # Call the function with your inputs
+    combined_result = combine_elements(input_list1, input_list2)
+
+    # Print the output
+    print("Input List 1:", input_list1)
+    print("Input List 2:", input_list2)
+    print("\nCombined Result:", combined_result)
