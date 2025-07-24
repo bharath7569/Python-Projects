@@ -1,0 +1,54 @@
+def format_indian_number(number: float) -> str:
+    s = str(number)
+    if '.' in s:
+        integer_part, fractional_part = s.split('.', 1)
+    else:
+        integer_part = s
+        fractional_part = None
+
+    is_negative = False
+    if integer_part.startswith('-'):
+        is_negative = True
+        integer_part = integer_part[1:]
+
+    if not integer_part:
+        formatted_integer_part = "0"
+    else:
+        l = len(integer_part)
+        if l <= 3:
+            formatted_integer_part = integer_part
+        else:
+            last_three = integer_part[l - 3:]
+            rest = integer_part[:l - 3]
+
+            parts = [last_three]
+
+            i = len(rest) - 2
+            while i >= 0:
+                parts.insert(0, rest[i:i + 2])
+                i -= 2
+
+            if i == -1 and len(rest) % 2 != 0:
+                parts.insert(0, rest[0])
+
+            formatted_integer_part = ','.join(parts)
+
+    if is_negative:
+        formatted_integer_part = '-' + formatted_integer_part
+
+    if fractional_part is not None:
+        return f"{formatted_integer_part}.{fractional_part}"
+    else:
+        return formatted_integer_part
+
+
+if __name__ == "__main__":
+    while True:
+        try:
+            user_input = float(input("Enter a floating-point number: "))
+            break
+        except ValueError:
+            print("Invalid input. Please enter a valid floating-point number.")
+
+    formatted_number = format_indian_number(user_input)
+    print(f"Indian Numbering System: {formatted_number}")
