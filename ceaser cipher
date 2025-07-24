@@ -1,0 +1,38 @@
+def caesar_cipher_encode(message: str, shift: int) -> str:
+    encoded_message = ""
+    shift = shift % 26
+
+    for char in message:
+        if 'a' <= char <= 'z':
+            start_ascii = ord('a')
+            encoded_char_ascii = start_ascii + (ord(char) - start_ascii + shift) % 26
+            encoded_message += chr(encoded_char_ascii)
+        elif 'A' <= char <= 'Z':
+            start_ascii = ord('A')
+            encoded_char_ascii = start_ascii + (ord(char) - start_ascii + shift) % 26
+            encoded_message += chr(encoded_char_ascii)
+        else:
+            encoded_message += char
+    return encoded_message
+
+def caesar_cipher_decode(message: str, shift: int) -> str:
+    return caesar_cipher_encode(message, -shift)
+
+if __name__ == "__main__":
+    print("--- Caesar Cipher Encoder/Decoder ---")
+
+    user_message = input("Enter the message: ")
+    while True:
+        try:
+            user_shift = int(input("Enter the shift value (an integer): "))
+            break
+        except ValueError:
+            print("Invalid input. Please enter an integer for the shift.")
+
+    # Encode the message
+    encoded_message = caesar_cipher_encode(user_message, user_shift)
+    print(f"\nEncoded Message: {encoded_message}")
+
+    # Decode the message
+    decoded_message = caesar_cipher_decode(encoded_message, user_shift)
+    print(f"Decoded Message: {decoded_message}")
